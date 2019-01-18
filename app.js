@@ -93,6 +93,27 @@ var budgetController = (function() {
 // UI Controller
 var UIController = (function() {
 	
+	var DOMStrings = {
+		inputType: '.add__type',
+		inputDescription: '.add__description',
+		inputValue: '.add__value',
+		inputAddBtn: '.add__btn'
+	};
+	
+	return {
+		getInput: function() {
+			return {
+				type: document.querySelector(DOMStrings.inputType).value,
+				description: document.querySelector(DOMStrings.inputDescription).value,
+				value: document.querySelector(DOMStrings.inputValue).value
+			};
+		},
+		
+		getDOMStrings: function() {
+			return DOMStrings;
+		}
+	};
+	
 })();
 
 
@@ -101,8 +122,12 @@ var UIController = (function() {
 // global controller
 var appController = (function(budgetCtrl, UICtrl) {
 	
+	var DOM = UICtrl.getDOMStrings();
+	
 	var ctrlAddItem = function() {
 		// 1. gather field input data
+		var input = UICtrl.getInput();
+		console.log(input);
 
 		// 2. add the item to the budget controller
 		
@@ -111,11 +136,10 @@ var appController = (function(budgetCtrl, UICtrl) {
 		// 4. calculate budget
 		
 		// 5. display the budget on UI
-		console.log('yay');
 	}
 
 	//click event
-	document.querySelector('.add__btn').addEventListener('click', ctrlAddItem); 
+	document.querySelector(DOM.inputAddBtn).addEventListener('click', ctrlAddItem); 
 	
 	  
 	// keypress event
