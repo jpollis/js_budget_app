@@ -148,7 +148,9 @@ var UIController = (function() {
 		inputType: '.add__type',
 		inputDescription: '.add__description',
 		inputValue: '.add__value',
-		inputAddBtn: '.add__btn'
+		inputAddBtn: '.add__btn',
+		incomeContainer: '.income__list',
+		expenseContainer: '.expenses__list'
 	};
 	
 	return {
@@ -160,10 +162,35 @@ var UIController = (function() {
 			};
 		},
 		
+		addListItem: function(obj, type) {
+			var html, newHtml, listElement;
+			// create html string with placeholder
+			if (type === 'inc') {
+				
+				listElement = DOMStrings.incomeContainer;
+				
+				html = '<div class="item clearfix" id="%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+				
+			} else if (type === 'exp') {
+				
+				listElement = DOMStrings.expenseContainer;
+				
+				html = '<div class="item clearfix" id="%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+			}
+			// replace placeholder text with real data
+			newHtml = html.replace('%id%', obj.id)
+			newHtml = newHtml.replace('%description%', obj.description)
+			newHtml = newHtml.replace('%value%', obj.value)
+			// insert into DOM
+			
+			document.querySelector(listElement).insertAdjacentHTML('beforeend', newHtml);
+		},
+		
 		getDOMStrings: function() {
 			return DOMStrings;
 		}
 	};
+	
 	
 })();
 
@@ -178,13 +205,13 @@ var appController = (function(budgetCtrl, UICtrl) {
 		var DOM = UICtrl.getDOMStrings();
 		
 		
-		document.querySelector(DOM.inputAddBtn).addEventListener('click', ctrlAddItem); 
-		
+		document.querySelector(DOM.inputAddBtn).addEventListener('click', ctrlAddItem);
 		
 		document.addEventListener('keypress', function(e) {
-		  if (e.which === 13 || e.keyCode === 13) {
-	        ctrlAddItem();
-		  } 
+			if (e.which === 13 || e.keyCode === 13) {
+			  e.preventDefault();
+			  ctrlAddItem();
+			} 
 		});
 		
 	};
@@ -196,7 +223,7 @@ var appController = (function(budgetCtrl, UICtrl) {
 		// 2. add the item to the budget controller
 		var newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 		// 3. add new item to UI
-		
+		UICtrl.addListItem(newItem, input.type);
 		// 4. calculate budget
 		
 		// 5. display the budget on UI
