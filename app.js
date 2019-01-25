@@ -158,7 +158,7 @@ var UIController = (function() {
 			return {
 				type: document.querySelector(DOMStrings.inputType).value,
 				description: document.querySelector(DOMStrings.inputDescription).value,
-				value: document.querySelector(DOMStrings.inputValue).value
+				value: parseFloat(document.querySelector(DOMStrings.inputValue).value)
 			};
 		},
 		
@@ -186,6 +186,25 @@ var UIController = (function() {
 			document.querySelector(listElement).insertAdjacentHTML('beforeend', newHtml);
 		},
 		
+		clearFields: function() {
+			var fields, fieldsArray, typeField;
+			
+			//typeField = document.querySelector(DOMStrings.inputType);
+			
+			fields = document.querySelectorAll(DOMStrings.inputDescription + ', ' + DOMStrings.inputValue);
+			
+			fieldsArray = Array.prototype.slice.call(fields);
+			
+			fieldsArray.forEach(function(current, index, array){
+				current.value = "";				
+			});
+			
+			//typeField.value = 'inc';
+			
+			fieldsArray[0].focus();
+			
+		},
+		
 		getDOMStrings: function() {
 			return DOMStrings;
 		}
@@ -204,7 +223,6 @@ var appController = (function(budgetCtrl, UICtrl) {
 		
 		var DOM = UICtrl.getDOMStrings();
 		
-		
 		document.querySelector(DOM.inputAddBtn).addEventListener('click', ctrlAddItem);
 		
 		document.addEventListener('keypress', function(e) {
@@ -216,17 +234,32 @@ var appController = (function(budgetCtrl, UICtrl) {
 		
 	};
 	
+	var updateBudget = function() {
+		// 1. calculate budget
+		
+		//2. Return the budget
+		
+		// 3. display the budget on UI
+		
+		
+	}
+	
 	var ctrlAddItem = function() {
 		// 1. gather field input data
 		var input = UICtrl.getInput();
 		console.log(input);
-		// 2. add the item to the budget controller
-		var newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-		// 3. add new item to UI
-		UICtrl.addListItem(newItem, input.type);
-		// 4. calculate budget
 		
-		// 5. display the budget on UI
+		if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+			// 2. add the item to the budget controller
+			var newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+			// 3. add new item to UI
+			UICtrl.addListItem(newItem, input.type);
+			// 3.5 clear fields
+			UICtrl.clearFields();
+			
+			//calculate and update budget
+			updateBudget();
+		}
 	}
 	
 	return {
